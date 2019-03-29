@@ -1,0 +1,149 @@
+//============================================================================
+// Name        : C++Project1.cpp
+// Author      : 
+// Version     :
+// Copyright   : Your copyright notice
+// Description :
+//============================================================================
+
+#include <iostream>
+using namespace std;
+
+struct Node
+{
+int data;
+Node *left;
+Node *right;
+};
+Node *insertNode(Node *root,int data)
+{
+   if (root== NULL){
+	   Node *New_node=new Node();
+	    New_node->data=data;
+	     New_node->left= NULL;
+	     New_node->right= NULL;
+      root= New_node;
+   return root;
+   }
+   else if (data<= root->data){
+      root->left= insertNode(root->left,data);
+   }
+   else
+   {
+      root->right= insertNode(root->right,data);
+   }
+   return root;
+}
+void preorder(Node*root)
+{
+	if(root==NULL)
+		return;
+	cout<<root->data<<" ";
+	preorder(root->left);
+	preorder(root->right);
+}
+void inorder(Node*root)
+{
+	if (root==NULL)
+		return;
+	inorder(root->left);
+	cout<<root->data<<" ";
+	inorder(root->right);
+}
+void postorder(Node*root)
+{
+	if (root==NULL)
+		return ;
+	postorder(root->left);
+	postorder(root->right);
+	cout<<root->data<<" ";
+}
+int height(Node* root) {
+    if (root==NULL)
+    return 0;
+    int h1= height(root->left);
+    int h2= height(root->right);
+    if (h1 > h2)
+        return(h1+1);
+    else
+        return(h2+1);
+}
+void printLevelorder(Node* root,int l) {
+    if (root==NULL)
+    return;
+    else if (l==0)
+    {
+     cout<<root->data<<" ";
+     return;
+    }
+    else
+    printLevelorder(root->left,l-1);
+    printLevelorder(root->right,l-1);
+}
+void levelorder(Node* root)
+{
+    int h=height(root);
+    for (int i=0;i<= h;i++)
+    {
+    printLevelorder(root,i);
+    }
+    cout << endl;
+}
+int main()
+{
+	char ans;
+	do
+	{
+	Node *root=NULL;
+	int type;
+	int n;
+	int *A;
+	cout << "How many numbers would you like to insert? ";
+	cin >> n;
+	A = new int[n];
+	cout << "Enter the numbers to be inserted: ";
+	for (int i=0;i<n;i++)
+	{
+	cin>>A[i];
+	}
+	root = insertNode(root,A[0]);
+    for (int i=1; i<n; i++)
+    {
+        insertNode(root,A[i]);
+	}
+	   cout<<"please input your choice: \n";
+	   cout<<"1 for inorder, 2 for preorder, 3 for levelorder and 4 for postorder: \n";
+	   cin>>type;
+	   switch(type)
+	    {
+	    case 1:
+	       cout<<"Inorder traversal:\n";
+	       inorder(root);
+	       cout<<"\n"<<endl;
+	        break;
+	   case 2:
+		   cout<<"Preorder traversal: \n";
+	       preorder(root);
+	       cout<<endl;
+	       break;
+	   case 3:
+		   cout<<"levelorder traversal: \n";
+		   levelorder(root);
+		   cout<<endl;
+	        break;
+	   case 4:
+		   cout<<"Postorder traversal: \n";
+	        postorder(root);
+	        cout<<endl;
+	        break;
+	   default :
+	    	cout<<"wrong choice";
+	    }
+	   cout << "Do you want another option?\n"
+	    << "Press y for yes, n for no,\n";
+	    cin >> ans;
+	    cout<<endl;
+	}
+	    while (ans == 'y' || ans == 'Y');
+  return 0;
+}
