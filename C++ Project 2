@@ -1,0 +1,198 @@
+//============================================================================
+// Name        : C++Project2.cpp
+// Author      : 
+// Version     :
+// Copyright   : Your copyright notice
+// Description : Hello World in C++, Ansi-style
+//============================================================================
+#include <iostream>
+using namespace std;
+
+struct Node
+{
+int data;
+Node *left;
+Node *right;
+};
+Node *insertNode(Node *root,int data)
+{
+	if (root== NULL){
+		   Node *New_node=new Node();
+		    New_node->data=data;
+		     New_node->left= NULL;
+		     New_node->right= NULL;
+	      root= New_node;
+   return root;
+   }
+   else if (data<= root->data){
+      root->left= insertNode(root->left,data);
+   }
+   else
+   {
+      root->right= insertNode(root->right,data);
+   }
+   return root;
+}
+bool search(Node*root, int data)
+   {
+	if (root== NULL){
+		return false;
+	}
+	else if (root->data ==data){
+		return true;
+	}
+	else if (root->data > data){
+		return search(root->left, data);
+	}
+	else
+	{
+	    return search (root->right, data);
+	}
+  }
+Node* FindMax(Node* root)
+{
+    if(root==NULL)
+    return NULL;
+
+    while(root->right!= NULL)
+    {
+       root= root->right;
+    }
+    return root;
+}
+Node *Delete(struct Node*root,int data)
+{
+	if(root==NULL)
+	return root;
+	else if (data < root->data)
+	root-> left=Delete (root->left, data);
+	else if (data > root->data)
+	root-> right=Delete (root->right, data);
+	else
+	{
+		if (root->left == NULL && root->right == NULL)
+		{
+			delete root;
+			root=NULL;
+		}
+		else if(root->left == NULL)
+		{
+		   Node*temp =root;
+           root= root->right;
+           delete temp;
+           return root;
+		}
+		else if(root->right == NULL)
+		{
+			 Node*temp =root;
+			 root= root->left;
+			 delete temp;
+			 return root;
+		}
+		else
+		{
+			 Node* temp= FindMax(root->left);
+			  root->data= temp->data;
+			  root->left= Delete(root->left, temp->data);
+		}
+	}
+	return root;
+}
+void preorder(Node*root)
+{
+	if(root==NULL)
+		return;
+	cout<<root->data<<" ";
+	preorder(root->left);
+	preorder(root->right);
+
+}
+void inorder(Node*root)
+{
+	if (root==NULL)
+		return;
+	inorder(root->left);
+	cout<<root->data<<" ";
+	inorder(root->right);
+}
+void postorder(Node*root)
+{
+	if (root==NULL)
+		return ;
+	postorder(root->left);
+	postorder(root->right);
+	cout<<root->data<<" ";
+}
+int height(Node* root) {
+    if (root==NULL)
+    return -1;
+    int h1 = height(root->left);
+    int h2 = height(root->right);
+    return max(h1, h2) + 1;
+}
+int main()
+{
+	Node *root=NULL;
+	int type,num,option,ele;
+	int n;
+	int *A;
+	cout << "How many numbers would you like to insert? ";
+	cin >> n;
+	A = new int[n];
+	cout << "Enter numbers to be inserted: ";
+	for (int i=0; i<n; i++)
+	{
+	cin>> A[i];
+	}
+	root = insertNode(root,A[0]);
+    for (int i=1; i<n; i++)
+    {
+        insertNode(root,A[i]);
+	}
+    cout<<"please input your operation: \n";
+    cout<<"1 for Delete element and 2 for search element: \n";
+   	cin>>option;
+    switch(option)
+    {
+    case 1:
+    	cout<<"enter the element to be deleted: ";
+    		   cin>>ele;
+    root = Delete(root,ele);
+    break;
+    case 2:
+    	cout<<"enter the element to be searched: ";
+    		   cin>>num;
+    		   if (search(root,num) == true)
+    			   cout<<"element is found\n";
+    		   else
+    			   cout<<"element is not found\n";
+    		   break;
+    default :
+    	cout<<"wrong choice";
+    }
+
+	   cout<<"please input your choice: \n";
+	   cout<<"1 for inorder, 2 for preorder, and 3 for postorder: \n";
+	   cin>>type;
+	   switch(type)
+	    {
+	    case 1:
+	       cout<<"Inorder traversal:\n";
+	       inorder(root);
+	       cout<<"\n"<<endl;
+	        break;
+	   case 2:
+		   cout<<"Preorder traversal: \n";
+	       preorder(root);
+	       cout<<endl;
+	       break;
+	   case 3:
+		   cout<<"Postorder traversal: \n";
+	        postorder(root);
+	        cout<<endl;
+	        break;
+	   default :
+	    	cout<<"wrong choice";
+	    }
+	   return 0;
+}
